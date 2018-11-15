@@ -1,9 +1,11 @@
 package com.example.qianb.objdetectionncnn;
 
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -13,6 +15,12 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.lang.String;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
 
@@ -120,4 +128,14 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         System.loadLibrary("native-lib");
     }
 
+    public void onCapture(View view) {
+        //Save Image by Button Click
+        File sdRoot = Environment.getExternalStorageDirectory();
+        String dir = "/DCIM/Data Collection/";
+        String fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).toString() + ".png";
+        File mkDir = new File(sdRoot, dir);
+        mkDir.mkdirs();
+        File pictureFile = new File(sdRoot, dir + fileName);
+        Imgcodecs.imwrite(pictureFile.getPath(), mRgba);
+    }
 }
