@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     private boolean              mIsJavaCamera = true;
     private MenuItem mItemSwitchCamera = null;
 
+    private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+    private boolean hasCameraPermission;
+
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -53,7 +56,12 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.camera_view);
 
-        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        hasCameraPermission = permissionsDelegate.hasCameraPermission();
+
+        if (hasCameraPermission)
+            mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        else
+            permissionsDelegate.requestCameraPermission();
 
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
